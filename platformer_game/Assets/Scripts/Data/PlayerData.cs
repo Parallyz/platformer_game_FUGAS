@@ -1,21 +1,24 @@
+
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerData : MonoBehaviour
+public class PlayerData
 {
-    public string playerName { get; set; }
-    public int coins;
-    public int keys;
+    public string playerName;
+    public int lastPlayerLevel = 1;
 
-    public int health { get; set; }
 
-    public Vector2 respawn { get; set; }
+
+    public int playerCoinsScore;
+    public int playerKeyScore;
     public PlayerData()
     {
-        coins = ScoreManager.coinCount;
-        keys = ScoreManager.keyCount;
+        playerCoinsScore = ScoreManager.coinCount;
+        playerKeyScore = ScoreManager.keyCount;
         playerName = GameController.instanse.playerName;
+
+        lastPlayerLevel = GameController.instanse.lastPlayerLevel;
     }
 }

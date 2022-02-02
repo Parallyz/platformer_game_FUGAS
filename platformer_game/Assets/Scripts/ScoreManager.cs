@@ -4,29 +4,41 @@ using UnityEngine;
 using TMPro;
 public class ScoreManager : MonoBehaviour
 {
-  public static ScoreManager instanse;
+    public static ScoreManager instanse;
 
-  [SerializeField]
-  private TextMeshProUGUI coinText;
-  [SerializeField]
-  private TextMeshProUGUI keyText;
+    [SerializeField]
+    private TextMeshProUGUI coinText;
+    [SerializeField]
+    private TextMeshProUGUI keyText;
 
 
-  
- 
 
-  
 
-  public static int coinCount { get; set; }           
- 
-  public static int keyCount { get; set; }
+
+
+
+    public static int coinCount { get; set; }
+
+    public static int keyCount { get; set; }
+
+    private PlayerData player;
 
     void Start()
     {
-        if(instanse==null)
+        if (instanse == null)
         {
-            instanse=this;
+            instanse = this;
         }
+         player = GameController.instanse.GetPlayerByName(GameController.instanse.playerName);
+
+        if (player != null)
+        {
+            ScoreManager.coinCount = player.playerCoinsScore;
+            ScoreManager.keyCount = player.playerKeyScore;
+            coinText.text = "X " + coinCount.ToString();
+            keyText.text = "X " + keyCount.ToString();
+        }
+
         // PlayerData data= SaveSystem.LoadPlayer();
         // if(data!=null)
         // {
@@ -37,27 +49,33 @@ public class ScoreManager : MonoBehaviour
 
     public void CoinChangeScore(int coinValue)
     {
-        coinCount+=coinValue;
-        coinText.text="X "+coinCount.ToString();
-       
+        coinCount += coinValue;
+        coinText.text = "X " + coinCount.ToString();
+
     }
-     public void KeyChangeScore(int keyValue)
+    public void KeyChangeScore(int keyValue)
     {
-        keyCount+=keyValue;
-        keyText.text="X "+keyCount.ToString();
-       
+        keyCount += keyValue;
+        keyText.text = "X " + keyCount.ToString();
+
 
     }
     public void RestartLevel()
     {
-        keyCount=0;
-        coinCount=0;
+        if (player != null)
+        {
+            ScoreManager.coinCount = player.playerCoinsScore;
+            ScoreManager.keyCount = player.playerKeyScore;
+            coinText.text = "X " + coinCount.ToString();
+            keyText.text = "X " + keyCount.ToString();
+        }
     }
-     public void FinalPrintScore()
+
+    public void FinalPrintScore()
     {
-        keyText.text="X "+keyCount.ToString();
-        coinText.text="X "+coinCount.ToString();
+        keyText.text = "X " + keyCount.ToString();
+        coinText.text = "X " + coinCount.ToString();
     }
-    
+
 
 }

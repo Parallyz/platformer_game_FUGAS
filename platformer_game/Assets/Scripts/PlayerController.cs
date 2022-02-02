@@ -6,15 +6,15 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
- 
-    private  int health=3;
-    private   int numOfHearth=3;
+
+    private int health = 3;
+    private int numOfHearth = 3;
     public Image[] hearts;
     public Sprite fullheart;
     public Sprite emptyheart;
 
-   
 
+    public Joystick joystick;
     public float speed = 3;
 
     private bool facingRight = true;
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         levelStartPos = transform.position;
         respawnPos = levelStartPos;
-       
+
     }
 
 
@@ -80,12 +80,21 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, theGround);
         animator.SetBool("isJump", !isGrounded);
-        horizontalMove = Input.GetAxis("Horizontal") * speed;
-        rb.velocity = new Vector2(horizontalMove, rb.velocity.y);
+      //  horizontalMove = Input.GetAxisRaw("Horizontal");
+          horizontalMove = joystick.Horizontal;
+        rb.velocity = new Vector2(horizontalMove * speed, rb.velocity.y);
 
 
     }
 
+    public void JumpButton()
+    {
+        if (isGrounded)
+        {
+            animator.SetBool("isJump", true);
+            Jump();
+        }
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Coin"))
@@ -99,7 +108,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("FallDetect"))
         {
             health--;
-            if(health==0)
+            if (health == 0)
             {
                 gameOver();
             }
@@ -111,12 +120,16 @@ public class PlayerController : MonoBehaviour
             respawnPos = transform.position;
             print("It is new Checkpoint");
         }
+        if (other.gameObject.CompareTag("Finish"))
+        {
+            LevelEndController.instanse.SuccesEndLevel();
+        }
     }
 
     private void gameOver()
     {
-       Time.timeScale=0;
-       LevelEndController.instanse.FailedEndLevel();
+        Time.timeScale = 0;
+        LevelEndController.instanse.FailedEndLevel();
     }
 
     private void FlipPlayer()
@@ -131,6 +144,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
 
@@ -144,11 +158,7 @@ public class PlayerController : MonoBehaviour
         {
             FlipPlayer();
         }
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            animator.SetBool("isJump", true);
-            Jump();
-        }
+
 
         // if()
         fallDetect.transform.position = new Vector2(transform.position.x, fallDetect.transform.position.y);

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 public  class LevelEndController  : MonoBehaviour
 {
     
@@ -35,6 +37,11 @@ public  class LevelEndController  : MonoBehaviour
         }
     }
 
+    // public void NextLevel()
+    // {
+    //     SceneManager.LoadScene(3);
+    // }
+
     public  void SuccesEndLevel()
     {
         Time.timeScale = 0;
@@ -45,8 +52,15 @@ public  class LevelEndController  : MonoBehaviour
 
         bgCanvas.SetActive(false);
 
+        GameController.instanse.SaveGame();
     }
 
+    public void OnNextLevel()
+    {
+        Time.timeScale = 1;
+        GameController.instanse.lastPlayerLevel+=1;
+        SceneManager.LoadScene(GameController.instanse.lastPlayerLevel+1);
+    }
     public  void FailedEndLevel()
     {
         Time.timeScale = 0;
